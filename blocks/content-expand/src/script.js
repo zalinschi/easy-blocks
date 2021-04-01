@@ -1,68 +1,105 @@
 import './style.scss'
 import $ from 'jquery'
 
-Math.easeInOutQuad = function (t, b, c, d) {
-  t /= d / 2
-  if (t < 1) return c / 2 * t * t + b
-  t--
-  return -c / 2 * (t * (t - 2) - 1) + b
+/*
+  Scroll Animation
+*/
+function scrollTo(element, duration) {
+    var e = document.documentElement;
+    if (e.scrollTop === 0) {
+        var t = e.scrollTop;
+        ++e.scrollTop;
+        e = t + 1 === e.scrollTop-- ? e : document.body;
+    }
+    scrollToC(e, e.scrollTop, element, duration);
+}
+
+// Element to move, element or px from, element or px to, time in ms to animate
+function scrollToC(element, from, to, duration) {
+    if (duration <= 0) return;
+    if (typeof from === "object") from = from.offsetTop;
+    if (typeof to === "object") to = to.offsetTop;
+
+    scrollToX(element, from, to, 0, 1 / duration, 20, easeOutCuaic);
+}
+
+function scrollToX(element, xFrom, xTo, t01, speed, step, motion) {
+    if (t01 < 0 || t01 > 1 || speed <= 0) {
+        element.scrollTop = xTo;
+        return;
+    }
+    element.scrollTop = xFrom - (xFrom - xTo) * motion(t01);
+    t01 += speed * step;
+
+    setTimeout(function() {
+        scrollToX(element, xFrom, xTo, t01, speed, step, motion);
+    }, step);
+}
+
+function easeOutCuaic(t) {
+    t--;
+    return t * t * t + 1;
 }
 
 /*
-  scrollTo(element.scrollTop || 200, 400)
+  Button Toggle
 */
-function scrollTo (to, duration) {
-  const element = document.scrollingElement
-  const start = (element && element.scrollTop) || window.pageYOffset,
-      change = to - start,
-      increment = 20
-  let currentTime = 0
-
-  const animateScroll = function () {
-    currentTime += increment
-    const val = Math.easeInOutQuad(currentTime, start, change, duration)
-    window.scrollTo(0, val)
-    if (currentTime < duration) {
-      window.setTimeout(animateScroll, increment)
-    }
-  }
-  animateScroll()
-}
-
 function buttonToggle () {
-  var OffsetTop = 0;
-  $('.btn-more').toggle(
-      function () {
+    var OffsetTop = 0
+
+    function handler_open () {
         $(this).parent().attr('data-toggle', 1)
         OffsetTop = $(document).scrollTop()
-      }, function () {
+        $(this).one('click', handler_close)
+    }
+
+    function handler_close () {
         $(this).parent().attr('data-toggle', 0)
         scrollTo(OffsetTop || 200, 100)
-      })
-}
-
-function seeMoreChekcHeight () {
-  $('.seemore').each(function () {
-    const button = $(this).find('.btn-more')
-    let elMaxHeight = $(this).find('.max-height')
-    let maxHeight = elMaxHeight.css('max-height').replace('px', '')
-    let height = $(this).find('.full-text').height()
-
-    if (height > maxHeight) {
-      button.show()
-      elMaxHeight.css('max-height', maxHeight)
-    } else {
-      button.hide()
-      elMaxHeight.css('max-height','initial')
+        $(this).one('click', handler_open)
     }
-  })
+
+    $('.btn-expand').one('click', handler_open)
 }
 
-window.addEventListener('load', function () {
-  seeMoreChekcHeight()
-  buttonToggle()
+/*
+ Check Height
+*/
+function seeMoreChekcHeight () {
+    $('.expand').each(function () {
+        const button = $(this).find('.btn-expand')
+        let elMaxHeight = $(this).find('.max-height')
+        let maxHeight = parseInt(elMaxHeight.attr('data-max-height'))
+        let elFullText = $(this).find('.full-text')
+        let height = elFullText.height()
+
+        //Get height in dispaly none
+        if (!height) {
+            var copied_elem = elFullText.clone().attr('id', false).css({
+                visibility: 'hidden', display: 'block',
+                position: 'absolute',
+            })
+            $('body').append(copied_elem)
+            height = copied_elem.height()
+            copied_elem.remove()
+        }
+
+        if (height > parseInt(maxHeight)) {
+            button.show()
+            elMaxHeight.css('max-height', maxHeight)
+        } else {
+            button.hide()
+            elMaxHeight.css('max-height', 'initial')
+        }
+    })
+}
+
+$(document).ready(function () {
+    seeMoreChekcHeight()
+    buttonToggle()
 })
 
 window.addEventListener('resize', seeMoreChekcHeight)
 
-export { seeMoreChekcHeight, buttonToggle }
+export {seeMoreChekcHeight, buttonToggle}
+

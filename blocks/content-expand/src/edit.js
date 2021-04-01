@@ -43,15 +43,15 @@ class Edit extends Component {
           </InspectorControls>
 
           <div className={className}>
-            <div className="seemore">
-              <div className="max-height" style={{ maxHeight: maxHeight }}>
+            <div className="expand">
+              <div className="max-height" style={{ maxHeight: maxHeight }} data-max-height={maxHeight}>
                 <div className="full-text">
                   <InnerBlocks
                       onChange={this.onChangeInner()}
                   />
                 </div>
               </div>
-              <div className="btn-more"></div>
+              <div className="btn-expand"></div>
             </div>
           </div>
         </Fragment>

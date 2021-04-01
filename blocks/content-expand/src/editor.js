@@ -30,13 +30,13 @@ registerBlockType('ust/expand', {
 
     return (
         <div>
-          <div className="seemore">
-            <div className="max-height" style={{ maxHeight: maxHeight }}>
+          <div className="expand">
+            <div className="max-height" style={{ maxHeight: maxHeight }}  data-max-height={maxHeight} >
               <div className="full-text">
                 <InnerBlocks.Content/>
               </div>
             </div>
-            <div className="btn-more"></div>
+            <div className="btn-expand"></div>
           </div>
         </div>
     )
