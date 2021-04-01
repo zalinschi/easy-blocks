@@ -1,0 +1,34 @@
+/*
+$colors: (
+    'dark-violet' : #502C70,
+    'purple' : #323232,
+    'orange' : #E87B00,
+    'bg_black' : #121212,
+    'black' : #1F1F1F,
+    'gray-dusty' : #959595,
+    'gray-silver' : #C4C4C4,
+    'gray-alto' : #D6D6D6,
+    'gray-mercury' : #E5E5E5,
+    'gray-wild_sand' : #F5F5F5,
+    'gray-alabaster' : #FAFAFA,
+    'red' : #FF554A,
+    );
+    
+    @each $name, $color in $colors {
+        .has-#{$name}-color {
+            color: $color;
+        }   
+        .has-#{$name}-background-color {
+            background-color: $color;
+        }
+    }
+
+*/
+
+.first-patern{
+    background-color: red im !important;
+}
+
+.has-dark-violet-background-color{
+    background-color: violet;
+}
